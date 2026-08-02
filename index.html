@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Estudo — AgentiX 2.0 | Apresentação 03/08</title>
+<style>
+  :root{
+    --red:#cc092f; --red-dark:#a00724; --bg:#0b0e14; --card:#0f1320; --card2:#161b2c;
+    --line:#242b40; --tx:#e6e9ef; --tx2:#c7cdda; --tx3:#8b93a7; --ok:#2ecc71; --warn:#f5a623; --blue:#4aa3ff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--tx); font-family:'Segoe UI',Arial,sans-serif; line-height:1.6;}
+  header{background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%); padding:36px 24px; text-align:center;}
+  header .badge{display:inline-block; background:#fff; color:var(--red); font-size:12px; font-weight:700; letter-spacing:1.5px; padding:6px 16px; border-radius:20px;}
+  header h1{font-size:32px; margin:14px 0 6px; font-weight:800;}
+  header p{color:#ffd6dd; font-size:15px;}
+  nav{position:sticky; top:0; z-index:50; background:var(--card); border-bottom:2px solid var(--red); display:flex; flex-wrap:wrap; justify-content:center; gap:4px; padding:10px 8px;}
+  nav button{background:transparent; border:1px solid var(--line); color:var(--tx2); padding:9px 16px; border-radius:20px; cursor:pointer; font-size:13.5px; font-weight:600; transition:.2s;}
+  nav button:hover{border-color:var(--red); color:#fff;}
+  nav button.active{background:var(--red); border-color:var(--red); color:#fff;}
+  main{max-width:960px; margin:0 auto; padding:28px 20px 80px;}
+  section{display:none; animation:fade .3s ease;}
+  section.show{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  h2{font-size:24px; margin:8px 0 18px; color:#fff; border-left:4px solid var(--red); padding-left:12px;}
+  h3{font-size:18px; margin:26px 0 10px; color:#fff;}
+  p{color:var(--tx2); margin-bottom:12px; font-size:15px;}
+  ul,ol{margin:0 0 14px 22px; color:var(--tx2); font-size:15px;}
+  li{margin-bottom:6px;}
+  strong{color:#fff;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:16px;}
+  .card.green{border-left:4px solid var(--ok);}
+  .card.yellow{border-left:4px solid var(--warn);}
+  .card.blue{border-left:4px solid var(--blue);}
+  .card.red{border-left:4px solid var(--red);}
+  .tag{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.8px; padding:3px 10px; border-radius:12px; margin-bottom:8px; text-transform:uppercase;}
+  .tag.doc{background:#123524; color:var(--ok);}
+  .tag.ws{background:#33230a; color:var(--warn);}
+  .tag.merge{background:#0e2440; color:var(--blue);}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr;}}
+  table{width:100%; border-collapse:collapse; margin-bottom:16px; font-size:14px;}
+  th{background:var(--card2); color:#fff; text-align:left; padding:10px 12px; border:1px solid var(--line);}
+  td{padding:10px 12px; border:1px solid var(--line); color:var(--tx2); vertical-align:top;}
+  /* Accordion */
+  .acc{border:1px solid var(--line); border-radius:10px; margin-bottom:10px; overflow:hidden; background:var(--card);}
+  .acc-head{width:100%; text-align:left; background:transparent; border:0; color:#fff; font-size:15px; font-weight:600; padding:15px 44px 15px 18px; cursor:pointer; position:relative; font-family:inherit;}
+  .acc-head::after{content:'+'; position:absolute; right:16px; top:50%; transform:translateY(-50%); color:var(--red); font-size:22px; font-weight:700; transition:.25s;}
+  .acc.open .acc-head::after{transform:translateY(-50%) rotate(45deg);}
+  .acc-body{max-height:0; overflow:hidden; transition:max-height .35s ease; padding:0 18px;}
+  .acc.open .acc-body{max-height:1200px; padding:0 18px 16px;}
+  /* Flashcards */
+  .fc-wrap{perspective:1200px; margin:0 auto 18px; max-width:640px;}
+  .fc{position:relative; width:100%; min-height:240px; transform-style:preserve-3d; transition:transform .5s; cursor:pointer;}
+  .fc.flip{transform:rotateY(180deg);}
+  .fc-face{position:absolute; inset:0; backface-visibility:hidden; border-radius:14px; padding:26px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;}
+  .fc-front{background:linear-gradient(140deg,var(--card2),var(--card)); border:1px solid var(--line);}
+  .fc-front .q{font-size:17px; font-weight:600; color:#fff;}
+  .fc-back{background:linear-gradient(140deg,#1a0910,#2a0d18); border:1px solid var(--red); transform:rotateY(180deg); overflow:auto;}
+  .fc-back .a{font-size:14.5px; color:var(--tx2); text-align:left;}
+  .fc-label{font-size:11px; letter-spacing:1.5px; color:var(--red); font-weight:700; margin-bottom:12px; text-transform:uppercase;}
+  .fc-controls{display:flex; justify-content:center; gap:10px; margin-bottom:8px;}
+  .btn{background:var(--red); color:#fff; border:0; padding:10px 22px; border-radius:22px; font-weight:700; cursor:pointer; font-size:14px; font-family:inherit;}
+  .btn.ghost{background:transparent; border:1px solid var(--line); color:var(--tx2);}
+  .btn:hover{filter:brightness(1.15);}
+  .fc-count{text-align:center; color:var(--tx3); font-size:13px; margin-bottom:16px;}
+  /* Script timeline */
+  .tl{border-left:3px solid var(--red); margin-left:10px; padding-left:24px;}
+  .tl-item{position:relative; margin-bottom:22px;}
+  .tl-item::before{content:''; position:absolute; left:-31px; top:6px; width:13px; height:13px; border-radius:50%; background:var(--red); border:3px solid var(--bg);}
+  .tl-time{display:inline-block; background:var(--card2); color:var(--warn); font-weight:700; font-size:12.5px; padding:3px 12px; border-radius:12px; margin-bottom:6px;}
+  .tl-item h4{color:#fff; font-size:16px; margin-bottom:6px;}
+  .speech{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--blue); border-radius:0 10px 10px 0; padding:14px 16px; margin:8px 0 4px; font-style:italic; color:var(--tx2); font-size:14.5px;}
+  .speech::before{content:'🎤 Fala sugerida'; display:block; font-style:normal; font-size:11px; font-weight:700; letter-spacing:1px; color:var(--blue); margin-bottom:6px; text-transform:uppercase;}
+  .slide-cue{display:block; margin:12px 0 4px; padding:7px 14px; background:#33230a; border:1px dashed var(--warn); border-radius:8px; color:var(--warn); font-style:normal; font-size:12.5px; font-weight:700; letter-spacing:.6px;}
+  .tip{background:#123524; border-radius:8px; padding:10px 14px; font-size:13.5px; color:#a9e8c5; margin-top:6px;}
+  .tip::before{content:'💡 '; }
+  .ascii{background:#0a0d14; border:1px solid var(--line); border-radius:10px; padding:16px; font-family:Consolas,monospace; font-size:12.5px; color:var(--tx2); overflow-x:auto; white-space:pre; margin-bottom:16px; line-height:1.45;}
+  .kpi{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:18px;}
+  .kpi .box{background:var(--card2); border:1px solid var(--line); border-radius:12px; padding:18px; text-align:center;}
+  .kpi .box .n{font-size:26px; font-weight:800; color:var(--red);}
+  .kpi .box .l{font-size:13px; color:var(--tx3); margin-top:4px;}
+  .check{list-style:none; margin-left:0;}
+  .check li{padding-left:0; margin-bottom:10px; display:flex; gap:10px; align-items:flex-start;}
+  .check input{margin-top:5px; accent-color:var(--red); width:16px; height:16px; cursor:pointer;}
+  .roadgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px;}
+  .road{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px;}
+  .road .num{display:inline-flex; width:28px; height:28px; align-items:center; justify-content:center; background:var(--red); color:#fff; font-weight:800; border-radius:50%; font-size:13px; margin-bottom:8px;}
+  .road h4{color:#fff; font-size:14.5px; margin-bottom:6px;}
+  .road p{font-size:13px; color:var(--tx3); margin:0;}
+  footer{text-align:center; color:var(--tx3); font-size:12.5px; padding:24px; border-top:1px solid var(--line);}
+  .legend{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; font-size:12.5px;}
+  .legend span{display:inline-flex; align-items:center; gap:6px; color:var(--tx3);}
+  .dot{width:10px; height:10px; border-radius:50%; display:inline-block;}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="badge">BIA TECH &nbsp;•&nbsp; AGENTIX 2.0</span>
+  <h1>Guia de Estudo &amp; Roteiro de Apresentação</h1>
+  <p>Apresentação 03/08 &nbsp;•&nbsp; ~30 min conceito (você) + 20 min demo (engenheiro)</p>
+</header>
+
+<nav id="nav">
+  <button class="active" data-s="s1">1. O que é</button>
+  <button data-s="s2">2. Como funciona</button>
+  <button data-s="s9">3. Acesso &amp; Onboarding</button>
+  <button data-s="s3">4. Benefícios &amp; Valor</button>
+  <button data-s="s4">5. Roadmap do Quarter</button>
+  <button data-s="s5">6. Q&amp;A do Workshop</button>
+  <button data-s="s6">7. Flashcards</button>
+  <button data-s="s7">8. Script da Fala</button>
+  <button data-s="s8">9. Checklist</button>
+</nav>
+
+<main>
+
+<!-- ============ 1. O QUE É ============ -->
+<section id="s1" class="show">
+  <h2>1. O que é o AgentiX 2.0</h2>
+
+  <div class="legend">
+    <span><span class="dot" style="background:var(--ok)"></span> Documentação oficial</span>
+    <span><span class="dot" style="background:var(--warn)"></span> Workshop (13/07)</span>
+    <span><span class="dot" style="background:var(--blue)"></span> Merge dos dois</span>
+  </div>
+
+  <div class="card green">
+    <span class="tag doc">Documentação oficial</span>
+    <p><strong>Definição em 1 frase (decore esta):</strong></p>
+    <p style="font-size:17px; color:#fff;">"O AgentiX 2.0 é a plataforma interna da BIA Tech para <strong>criar, organizar e executar agentes de IA</strong> de forma padronizada, auditável e escalável — em vez de prompts e scripts soltos, você monta componentes reutilizáveis e executa tudo em um fluxo controlado."</p>
+  </div>
+
+  <div class="card blue">
+    <span class="tag merge">Merge — posicionamento</span>
+    <p><strong>Onde o AgentiX se encaixa no ecossistema:</strong></p>
+    <ul>
+      <li><strong>AgentiX</strong> = plataforma de agentes <strong>tech-for-tech</strong> (para times de tecnologia).</li>
+      <li><strong>Bridge</strong> = a frente de IA para <strong>business</strong>; também é quem fornece os LLMs que o AgentiX consome.</li>
+      <li>O AgentiX <strong>não consome tokens do usuário</strong> — o custo é centralizado na plataforma.</li>
+    </ul>
+  </div>
+
+  <div class="card green">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">A evolução: 1.0 → 2.0</h3>
+    <ul>
+      <li><strong>Antes (1.0):</strong> fluxo legado baseado em <strong>AutoGen</strong>, difícil de entender e manter, definição via YAML.</li>
+      <li><strong>Agora (2.0):</strong> runtime consolidado com <strong>Agno</strong>, modelo <strong>OAF-first</strong>, definição de componentes em <strong>AGENTS.md</strong> e execução orientada por <strong>sessão</strong>.</li>
+      <li>Foco: mais <strong>padronização, previsibilidade e manutenção</strong>.</li>
+      <li>O suporte a YAML legado existe apenas <strong>para migração</strong>, não como caminho principal de autoria.</li>
+    </ul>
+    <div class="tip">Ganho prático do AGENTS.md: por ser padrão de mercado, o conhecimento que o time já tem de outros harnesses se aproveita direto — sem formato proprietário pra aprender.</div>
+  </div>
+
+  <div class="card">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">O que a plataforma junta em um só lugar</h3>
+    <ul>
+      <li><strong>Criação de componentes de IA</strong> (Agent, Team e Workflow).</li>
+      <li><strong>Publicação e versionamento de bundles.</strong></li>
+      <li><strong>Execução com rastreabilidade por sessão.</strong></li>
+      <li><strong>Recursos operacionais:</strong> streaming, HITL, artefatos e observabilidade.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">Analogia da cozinha profissional (ótima para a plateia)</h3>
+    <ul>
+      <li>O <strong>Agent</strong> é o cozinheiro especialista.</li>
+      <li>O <strong>Team</strong> é a brigada de cozinha.</li>
+      <li>O <strong>Workflow</strong> é a ordem das etapas da receita.</li>
+      <li>A <strong>Sessão</strong> é uma execução real dessa receita.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">Base conceitual: LLM puro × Agente</h3>
+    <p>Um LLM sozinho gera texto, resume, explica e traduz — mas <strong>não lê arquivos locais, não chama APIs internas, não persiste artefatos nem busca dados em tempo real</strong>. Um agente de IA é um LLM configurado com instruções, capacidades (skills) e limites operacionais.</p>
+    <div class="ascii">  Sem ferramentas (LLM puro)        Com ferramentas (Agente)
+  ┌──────────────────────┐          ┌──────────────────────────┐
+  │  Pessoa em uma sala  │          │   Pessoa com acesso a    │
+  │       isolada        │          │  computador e recursos   │
+  │      Só pensa...     │          │       Pensa e age        │
+  │      Não executa     │          │   Executa com contexto   │
+  └──────────────────────┘          └──────────────────────────┘</div>
+    <p><strong>Resumo prático:</strong> LLM puro pensa e responde. Agente pensa, responde <strong>e executa ações</strong>.</p>
+  </div>
+</section>
+
+<!-- ============ 2. COMO FUNCIONA ============ -->
+<section id="s2">
+  <h2>2. Como funciona — arquitetura e conceitos</h2>
+
+  <div class="card green">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">Hierarquia de componentes (do simples ao complexo)</h3>
+    <div class="ascii">              ┌───────────────────────────┐
+              │         WORKFLOW          │
+              │  Coordena etapas e        │
+              │  decisões do fluxo        │
+              └────────────┬──────────────┘
+                           │
+              ┌────────────▼──────────────┐
+              │           TEAM            │
+              │  Grupo de agentes em      │
+              │  colaboração coordenada   │
+              └────────────┬──────────────┘
+              ┌────────────┼──────────────┐
+        ┌─────▼─────┐ ┌────▼──────┐ ┌─────▼─────┐
+        │   AGENT   │ │   AGENT   │ │   AGENT   │
+        │  Analista │ │  Executor │ │  Revisor  │
+        └───────────┘ └───────────┘ └───────────┘</div>
+    <table>
+      <tr><th>Componente</th><th>O que é</th><th>Quando usar</th><th>Exemplo</th></tr>
+      <tr><td><strong>Agent</strong></td><td>Bloco mais simples</td><td>Tarefa única e direta</td><td>"Ler um texto e gerar um resumo técnico"</td></tr>
+      <tr><td><strong>Team</strong></td><td>Conjunto de agentes colaborando</td><td>Quando uma "pessoa virtual" não basta</td><td>Um analisa, outro escreve, outro revisa</td></tr>
+      <tr><td><strong>Workflow</strong></td><td>Fluxo completo com etapas em ordem</td><td>Começo, meio e fim bem definidos</td><td>Receber entrada → analisar → gerar saída → revisar → publicar</td></tr>
+    </table>
+    <p><strong>Estratégias de orquestração do Team:</strong> <code>coordinate</code>, <code>route</code>, <code>broadcast</code>, <code>tasks</code>.</p>
+    <div class="tip"><strong>Princípio recomendado (da doc):</strong> comece com um único Agent. Evolua para Team e Workflow conforme a complexidade real do caso.</div>
+  </div>
+
+  <div class="card green">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">Anatomia de um Agent</h3>
+    <ul>
+      <li><strong>model:</strong> define o modelo de linguagem — o "cérebro de raciocínio".</li>
+      <li><strong>instructions:</strong> como o agente deve agir — o comportamento esperado.</li>
+      <li><strong>skills:</strong> capacidades operacionais — as ações permitidas (ex.: <code>file-io</code>, <code>http-client</code>, <code>web-search</code>).</li>
+      <li><strong>harnessConfig:</strong> comportamento de execução (streaming, HITL, memória, guardrails).</li>
+      <li><strong>Variables:</strong> valores dinâmicos no formato <code>nome_variavel</code>.</li>
+    </ul>
+  </div>
+
+  <div class="card green">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">Os 3 arquivos-chave do runtime</h3>
+    <ul>
+      <li><strong>AGENTS.md</strong> — o documento onde você escreve <em>"quem são"</em> os agentes e <em>"como eles trabalham"</em>. É o caminho principal de definição.</li>
+      <li><strong>manifest.yaml</strong> — diz à plataforma <em>"como carregar e executar"</em> esse pacote (bundle). Funciona como etiqueta de compatibilidade interna — não é tecnologia externa.</li>
+      <li><strong>EngineRouter → AgnoEngine</strong> — o EngineRouter instancia o AgnoEngine para executar Agents, Teams e Workflows.</li>
+    </ul>
+  </div>
+
+  <div class="card green">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">Conceitos de contexto</h3>
+    <table>
+      <tr><th>Conceito</th><th>Definição</th></tr>
+      <tr><td><strong>Tenant</strong></td><td>Espaço da organização dentro da plataforma</td></tr>
+      <tr><td><strong>Projeto</strong></td><td>Conjunto ativo de componentes (bundle publicado)</td></tr>
+      <tr><td><strong>Sessão</strong></td><td>Uma execução real de Agent, Team ou Workflow</td></tr>
+      <tr><td><strong>Artefato</strong></td><td>Arquivo usado na execução (entrada) ou gerado (saída)</td></tr>
+    </table>
+    <p><strong>Na prática:</strong> se você abriu uma execução e recebeu um resultado, isso foi uma Sessão. Se um arquivo foi usado no processo, ele é um Artefato.</p>
+  </div>
+
+  <div class="card yellow">
+    <span class="tag ws">Workshop</span>
+    <h3 style="margin-top:0">Skills × Tools (dúvida comum, esclarecida no workshop)</h3>
+    <ul>
+      <li>A <strong>tool não é um objeto separado</strong> — ela faz parte da skill. A skill faz o mapping e instrui o agente a usar um determinado script/código.</li>
+      <li><strong>Pense assim: skill = script + instrução de como usar.</strong></li>
+      <li>Hoje tools são escritas em <strong>Python</strong>; suporte a <strong>Java, Node e outras linguagens</strong> está planejado.</li>
+      <li>Com o suporte a <strong>secrets</strong>, dá para criar skills que chamam APIs com credenciais de forma segura.</li>
+      <li>Exemplo real: a <strong>skill do GitHub</strong> instrui o agente a usar o GitHub CLI — ler PRs, issues, commits, estado de repositório — via API, sem interface.</li>
+    </ul>
+  </div>
+
+  <div class="card yellow">
+    <span class="tag ws">Workshop</span>
+    <h3 style="margin-top:0">Formas de uso: UI da plataforma + Plugin VS Code</h3>
+    <ul>
+      <li>Você pode criar e executar agentes pela <strong>UI da plataforma</strong> (no-code) ou pelo <strong>plugin do VS Code</strong>.</li>
+      <li>Visão do plugin: fazer <strong>o máximo possível sem trocar de janela</strong> — construir, enviar e consumir agentes de dentro do VS Code. Na plataforma fica o papel do <strong>tenant admin</strong> (ex.: aprovação de agentes enviados via plugin).</li>
+      <li>Agente enviado via plugin passa por <strong>aprovação</strong> na plataforma.</li>
+      <li>Ambientes: <strong>laboratório → desenvolvimento → homologação → produção</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="card yellow">
+    <span class="tag ws">Workshop</span>
+    <h3 style="margin-top:0">Modelos (LLMs) disponíveis</h3>
+    <ul>
+      <li>Os modelos vêm <strong>via Bridge</strong>: linha <strong>OpenAI</strong> (ex.: GPT-5/4) e <strong>Anthropic</strong> (ex.: Sonnet 4.6, Opus).</li>
+      <li>Atualizar/adicionar modelo é simples: requisição à Bridge → deploy em 1–2 dias → configura na plataforma.</li>
+      <li>Não é possível acessar os modelos do AgentiX diretamente pelo Copilot Chat — são frentes separadas (justamente para não consumir tokens do usuário).</li>
+    </ul>
+  </div>
+
+  <div class="card blue">
+    <span class="tag merge">Merge</span>
+    <h3 style="margin-top:0">Multi-agentes hoje (importante para não errar na frente da plateia)</h3>
+    <ul>
+      <li><strong>Suportado:</strong> múltiplos agentes orquestrados — a saída de um agente vira input do próximo, controlado pelo Workflow.</li>
+      <li><strong>Não suportado (ainda):</strong> <em>sub-agentes</em> (um agente rodando outro agente dentro do próprio contexto). O time avalia implementar se surgirem casos de uso.</li>
+      <li><strong>RAG:</strong> existe uma versão <strong>built-in básica</strong> (similar à V1, com upload de arquivos + embedding). Está em desenvolvimento a integração com a <strong>nova plataforma de RAG da BIA Tech</strong> (vídeo, áudio, páginas do Confluence, ownership e feedback) — o AgentiX vai plugar nela via API.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 3. ACESSO & ONBOARDING ============ -->
+<section id="s9">
+  <h2>3. Acesso &amp; Onboarding — como começar a usar</h2>
+  <p>Fluxo oficial de habilitação e acessos, conforme a documentação (páginas atualizadas em 24/07). Caminho único de entrada: portal <strong>BEX</strong> → menu <strong>Marketplace</strong> → pesquisar <strong>"AgentiX"</strong> → <strong>Acessar</strong>.</p>
+
+  <div class="card green">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">Ordem oficial do onboarding (decore a sequência)</h3>
+    <div class="ascii">  1. HABILITAÇÃO          2. REPOSITÓRIOS           3. ACESSOS
+     AGENTIX          ──▶     E PIPELINES        ──▶    AGENTIX
+  vincula centro de       provisiona repositório     concede perfil por
+  custo, Jira e           no GitHub corporativo      usuário, aprovado pelo
+  responsáveis            + dados de governança      Gestor de Acesso</div>
+  </div>
+
+  <div class="card green">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">Passo 1 — Habilitação AgentiX</h3>
+    <p><strong>Objetivo:</strong> vincular centro de custo, projeto Jira e responsáveis para liberar os próximos fluxos.</p>
+    <p><strong>Preenchimento do formulário, na sequência:</strong></p>
+    <ol>
+      <li><strong>Centro de custo.</strong></li>
+      <li><strong>Projeto Jira.</strong></li>
+      <li><strong>E-mail do Gerente</strong> — pode ser o gerente departamental ou o gerente direto; o importante é ter o cargo <strong>"MANAGER"</strong>. Valide o e-mail clicando na lupa do campo.</li>
+      <li><strong>Gestores de acesso</strong> do projeto (adicionados pela matrícula).</li>
+      <li><strong>Justificativa</strong> da habilitação.</li>
+      <li><strong>Revisar e enviar.</strong></li>
+    </ol>
+    <p><strong>Resultado:</strong> mensagem de sucesso, acompanhamento pela aba <strong>"Consultar"</strong>, e após a aprovação do gerente o projeto fica apto para solicitar Repositórios e Pipelines. O Gestor de Acesso passa a receber o fluxo de aprovação de acessos.</p>
+  </div>
+
+  <div class="card red">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">Regra importante: o Gestor de Acesso</h3>
+    <ul>
+      <li>É o <strong>cargo máximo dentro do projeto</strong> — está acima do tenant admin.</li>
+      <li>É quem <strong>aprova ou reprova solicitações de acesso</strong> do projeto.</li>
+      <li>Pode ser a mesma pessoa que o tenant admin, <strong>mas não é regra</strong>.</li>
+      <li>Pode existir mesmo sem atuar como usuário operacional do AgentiX.</li>
+      <li><strong>Recomendação oficial:</strong> atribuir esse papel a <strong>Product Owners ou Tech Leads</strong>. (Você, como PM, é candidata natural — bom gancho pessoal na apresentação.)</li>
+    </ul>
+  </div>
+
+  <div class="card green">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">Passo 2 — Repositórios e Pipelines</h3>
+    <p><strong>Objetivo:</strong> provisionar o repositório no GitHub corporativo e registrar os dados obrigatórios de governança.</p>
+    <ol>
+      <li>Selecionar o <strong>projeto Jira habilitado</strong> (o mesmo da habilitação).</li>
+      <li>Preencher todos os <strong>campos de governança</strong>.</li>
+      <li>Informar o <strong>nome do repositório</strong> (seguindo as regras de nomenclatura da plataforma).</li>
+      <li><strong>Revisar</strong> e <strong>Finalizar</strong>.</li>
+    </ol>
+    <p><strong>Depois do envio:</strong> a plataforma dispara e-mail para o time de governança, o repositório é criado no GitHub com o nome informado e a solicitação fica rastreável na aba "Consultar".</p>
+    <div class="tip">Boas práticas da doc: validar a nomenclatura antes de enviar, revisar os campos de governança para evitar retrabalho e confirmar se o Jira selecionado é o mesmo da habilitação.</div>
+  </div>
+
+  <div class="card green">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">Passo 3 — Acessos AgentiX (perfis)</h3>
+    <p><strong>Objetivo:</strong> conceder o perfil adequado para cada usuário do projeto, com aprovação do Gestor de Acesso. A solicitação afeta <strong>plataforma e GitHub</strong> conforme o perfil.</p>
+    <table>
+      <tr><th>Perfil</th><th>Escopo de acesso</th></tr>
+      <tr><td><strong>Visualizador</strong></td><td>Somente visualiza logs e agentes — não executa nem edita nada</td></tr>
+      <tr><td><strong>Executor</strong></td><td>Executa o agente, sem poder fazer ajustes ou publicar mudanças</td></tr>
+      <tr><td><strong>Desenvolvedor</strong></td><td>Constrói e ajusta os agentes + permissões de desenvolvimento no GitHub</td></tr>
+      <tr><td><strong>Admin</strong></td><td>Faz tudo: constrói, ajusta e ainda aprova o que vai para o tenant dele</td></tr>
+    </table>
+    <p><strong>Fluxo de aprovação:</strong> solicitação → notificação ao Gestor de Acesso → análise → aprova/reprova → solicitante acompanha o status. <strong>Regra operacional:</strong> o aprovador é o <strong>Gestor de Acesso definido na habilitação</strong>, não necessariamente o tenant admin ou o gerente departamental.</p>
+  </div>
+
+  <div class="card yellow">
+    <span class="tag ws">Workshop</span>
+    <h3 style="margin-top:0">Avisos práticos (do workshop)</h3>
+    <ul>
+      <li>A credencial é a <strong>mesma de rede</strong>, mas a <strong>permissão do V1 não vale para o V2</strong> — precisa solicitar.</li>
+      <li>Sem acesso ao ambiente de dev? Falar com o time da plataforma (fazem call de onboarding).</li>
+      <li>A documentação oficial tem passo a passo com prints e vídeo do plugin.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 4. BENEFÍCIOS ============ -->
+<section id="s3">
+  <h2>4. Benefícios &amp; Proposta de Valor</h2>
+
+  <div class="kpi">
+    <div class="box"><div class="n">0</div><div class="l">tokens consumidos do usuário — custo centralizado</div></div>
+    <div class="box"><div class="n">1</div><div class="l">padrão único de definição (AGENTS.md / OAF)</div></div>
+    <div class="box"><div class="n">100%</div><div class="l">das execuções rastreáveis por sessão</div></div>
+    <div class="box"><div class="n">4</div><div class="l">ambientes: lab, dev, homolog, prod</div></div>
+  </div>
+
+  <div class="card green">
+    <span class="tag doc">Documentação oficial</span>
+    <h3 style="margin-top:0">O que resolve no dia a dia</h3>
+    <p>Sem uma plataforma, cada time cria <strong>prompts e scripts isolados, difíceis de manter</strong>. Com o AgentiX você tem:</p>
+    <ul>
+      <li><strong>Padrão</strong> para descrever agentes;</li>
+      <li><strong>Controle</strong> de execução e histórico;</li>
+      <li><strong>Reaproveitamento</strong> de componentes em diferentes casos de uso.</li>
+    </ul>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">Para o desenvolvedor</h3>
+      <ul>
+        <li>Padrão de mercado (AGENTS.md) — reconhecível em qualquer harness.</li>
+        <li>Plugin VS Code: constrói sem sair do editor.</li>
+        <li>Skills prontas (file-io, http-client, web-search, GitHub...).</li>
+        <li>Secrets para chamadas de API seguras.</li>
+        <li>Versionamento de bundles + rastreio via GitHub.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Para a organização</h3>
+      <ul>
+        <li>Governança: tenants, aprovação, permissionamento.</li>
+        <li>Observabilidade nativa: logs, status e <strong>custos por tenant/centro de custo</strong>, modelos usados, nº de execuções.</li>
+        <li>Auditabilidade: histórico completo por sessão.</li>
+        <li>Segurança: guardrails, HITL, MCPs sob controle do banco.</li>
+        <li>Escala: de 1 Agent a Workflows corporativos.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">Capacidades operacionais (da doc — decore os 5)</h3>
+    <ul>
+      <li><strong>Execução por sessão</strong> com histórico do que aconteceu.</li>
+      <li><strong>Streaming</strong> de eventos em tempo real para acompanhar o andamento.</li>
+      <li><strong>HITL</strong> ("Human-in-the-Loop"): validação humana em pontos da sessão antes dos agentes prosseguirem sozinhos até o fim do fluxo.</li>
+      <li><strong>Skills</strong> para ações práticas, como ler arquivos e chamar APIs.</li>
+      <li><strong>Observabilidade</strong> para acompanhar logs, status e custos.</li>
+    </ul>
+  </div>
+
+  <div class="card yellow">
+    <span class="tag ws">Workshop</span>
+    <h3 style="margin-top:0">Modelo de suporte e evolução (bom argumento de PM)</h3>
+    <ul>
+      <li>O time AgentiX é <strong>dono da plataforma</strong>, não dos agentes — quem constrói os agentes são os próprios times ("nós damos a cozinha, vocês cozinham").</li>
+      <li>Ticket via <strong>Back Access</strong>: suporte, bug ou nova funcionalidade → vira card no Jira.</li>
+      <li><strong>Reunião semanal de priorização</strong> com acompanhamento aberto aos usuários.</li>
+      <li>Backlog priorizado <strong>junto com os usuários</strong> — dor oficializada ganha força.</li>
+      <li>Autoatendimento de acesso no BEX está previsto (habilitar/solicitar/permissionar usuários).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 5. ROADMAP ============ -->
+<section id="s4">
+  <h2>5. Roadmap do Quarter</h2>
+  <p class="card yellow" style="padding:14px 18px;">⚠️ <strong>Na apresentação:</strong> apresente como <em>visão de evolução</em> — venda o futuro da plataforma com naturalidade, sem assumir compromisso de datas e sem entrar em detalhes técnicos. Se perguntarem prazo: <em>"está em priorização junto com os usuários — oficializa a necessidade via ticket que ela ganha força"</em>.</p>
+
+  <div class="roadgrid">
+    <div class="road"><span class="num">1</span><h4>Integrações / MCP</h4><p>GitHub, ServiceNow, Jira, Confluence, Dynatrace, Figma. GitHub é a prioridade nº 1 (mesma gerência do BIA Tech).</p></div>
+    <div class="road"><span class="num">2</span><h4>Escolha de executores</h4><p>Usuário poderá escolher o "tipo" de executor: Python, Java, Node etc.</p></div>
+    <div class="road"><span class="num">3</span><h4>Pipeline dos agentes</h4><p>Integração com reusable-ai, deploy via Change Velocity, notificações e atualização do Marketplace.</p></div>
+    <div class="road"><span class="num">4</span><h4>Pipeline da plataforma</h4><p>Conclusão: implementação do deploy via Change Velocity.</p></div>
+    <div class="road"><span class="num">5</span><h4>Bugs &amp; features</h4><p>Gerenciamento contínuo de correções e solicitações de novas funcionalidades.</p></div>
+    <div class="road"><span class="num">6</span><h4>Frontend NextJS</h4><p>Migração do frontend da plataforma para NextJS.</p></div>
+    <div class="road"><span class="num">7</span><h4>Workshops online</h4><p>6 eventos de capacitação online.</p></div>
+    <div class="road"><span class="num">8</span><h4>Workshops presenciais</h4><p>8 eventos: São Paulo (2), Uberlândia (2), Curitiba (2), Recife (2). Datas a definir.</p></div>
+    <div class="road"><span class="num">9</span><h4>Agente de migração 1.0 → 2.0</h4><p>Evolução do agente de migração como funcionalidade dentro da própria plataforma.</p></div>
+    <div class="road"><span class="num">10</span><h4>API Axway</h4><p>Integração com o gateway de APIs Axway.</p></div>
+    <div class="road"><span class="num">11</span><h4>Marketplace</h4><p>Construção do Marketplace de agentes.</p></div>
+    <div class="road"><span class="num">12</span><h4>BIA Tech 360</h4><p>Integração com o BIA Tech 360.</p></div>
+  </div>
+
+  <h3>Contexto de migração V1 → V2 (do workshop)</h3>
+  <div class="card yellow">
+    <ul>
+      <li>A partir do lançamento do 2.0, <strong>novos projetos nascem obrigatoriamente no V2</strong>.</li>
+      <li>Projetos existentes passam por <strong>transição gradual</strong> — V1 e V2 coexistem nesse meio-tempo.</li>
+      <li>Ao final, tudo consolida no 2.0.</li>
+      <li>Acesso: mesmas credenciais de rede, mas <strong>permissão do V1 não vale automaticamente para o V2</strong> — precisa solicitar.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 6. Q&A ============ -->
+<section id="s5">
+  <h2>6. Q&amp;A do Workshop (13/07) — perguntas reais e respostas oficiais</h2>
+  <p>Estas foram as perguntas feitas pela audiência no workshop, com as respostas do time da plataforma (Jeferson, Asaph, Roque). <strong>Alta chance de caírem de novo na sua apresentação.</strong> Clique para expandir.</p>
+
+  <div class="acc"><button class="acc-head">1. "Vai ter integração com Jira, GitHub? Já existe exemplo real com uma squad completa (PO, back, front, QA) conectada ao GitHub criando branch, código e PR?"</button>
+    <div class="acc-body"><p><strong>Resposta (Jeferson):</strong> A prioridade é disponibilizar os <strong>MCPs</strong>: GitHub, ServiceNow, Jira, Confluence, Dynatrace. O <strong>GitHub vem primeiro</strong> (o time do GitHub é da mesma gerência do BIA Tech, a conversa já foi iniciada). Sobre a squad completa de agentes: <strong>não é o foco do time AgentiX</strong> — o papel do time é a plataforma; a construção dos agentes é dos usuários. Existem outras frentes no banco com squads inteiras montadas sobre agentes, mas fora do AgentiX.</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">2. "Preciso conectar no MCP do Figma, que é um MCP externo. Como está isso?"</button>
+    <div class="acc-body"><p><strong>Resposta (Jeferson + Roque):</strong> MCPs <strong>externos</strong> ainda não estão sendo tratados — envolvem várias equipes, questões de <strong>segurança</strong> e de <strong>gateway</strong> que estão em discussão com o banco. A recomendação é <strong>oficializar a dor</strong>: abrir ticket + e-mail, para priorizar no backlog. Há reunião semanal de priorização onde o usuário acompanha a demanda.</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">3. "Se está tudo no AGENTS.md, cada interação reenvia o input? E a eficiência de tokens?"</button>
+    <div class="acc-body"><p><strong>Resposta (Jeferson):</strong> Uma vez enviadas, as instruções <strong>ficam na plataforma</strong> — não são reenviadas a cada interação. E o AgentiX <strong>não consome tokens do usuário</strong>; o custo cai para a plataforma.</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">4. "Quais os casos de uso do AgentiX?"</button>
+    <div class="acc-body"><p><strong>Resposta (Jeferson):</strong> Tudo que for <strong>tech-for-tech</strong>. Existem duas iniciativas de plataformas de agentes: AgentiX (tech-for-tech) e <strong>Bridge (business)</strong>.</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">5. "Qual a visão do plugin do VS Code?"</button>
+    <div class="acc-body"><p><strong>Resposta (Jeferson):</strong> Evoluir o plugin para você <strong>não precisar entrar na plataforma</strong> para interações do dia a dia. Na plataforma fica o que é papel do <strong>tenant admin</strong> (ex.: aprovar o agente enviado via plugin). O plugin já está funcional, mas com muita evolução pela frente.</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">6. "Quais LLMs estão disponíveis? Tem premium?"</button>
+    <div class="acc-body"><p><strong>Resposta (Jeferson + Asaph):</strong> Os modelos vêm da <strong>Bridge</strong>: linha OpenAI (GPT) e Anthropic (Sonnet/Opus). Adicionar ou atualizar modelo é simples: requisição à Bridge, deploy em ~1–2 dias, configuração na plataforma. <strong>Não</strong> é possível usar esses modelos direto pelo Copilot Chat (são frentes separadas).</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">7. "Para que serve o upload de arquivos? E a skill do GitHub?"</button>
+    <div class="acc-body"><p><strong>Resposta (Jeferson + Asaph):</strong> Upload serve para o agente <strong>consumir arquivos</strong> (ex.: subir um repositório para gerar documentação, ou um arquivo para embedding/base de conhecimento). A <strong>skill do GitHub</strong> instrui o agente a usar o GitHub CLI: ler PRs, issues, commits, estado do repositório — tudo via API. A skill <strong>file-io</strong> lê/escreve os arquivos do upload no mesmo file system (relação indireta, não 1-para-1).</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">8. "É multi-agentes ou sub-agentes?"</button>
+    <div class="acc-body"><p><strong>Resposta (Asaph):</strong> Neste primeiro momento: <strong>múltiplos agentes</strong> — a saída de um agente vira input do próximo, controlado pelo <strong>Workflow</strong>. <strong>Sub-agentes não são suportados</strong> ainda (não houve caso de uso). No mercado, sub-agents são usados para reduzir consumo de tokens (modelo mais barato explora, modelo mais forte produz) — se houver caso de uso, o time avalia implementar.</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">9. "Não vai mais poder criar tools em Python? E chamadas de API com secrets?"</button>
+    <div class="acc-body"><p><strong>Resposta (Asaph):</strong> Justamente o oposto: <strong>vai poder sim</strong> — hoje Python, e o plano é suportar <strong>Java, Node e outras linguagens</strong>. O ponto conceitual: a <strong>tool não é um objeto separado</strong>, ela fica "inclusa" na skill — a skill mapeia e instrui o agente a usar o script. <em>"A skill atua junto com a instrução de como usar."</em> Com secrets, dá para fazer chamadas de API de forma simples e segura.</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">10. "O acesso é o mesmo login de rede? Funciona na VPN?"</button>
+    <div class="acc-body"><p><strong>Resposta (Asaph):</strong> Mesmas credenciais de rede, <strong>mas não a mesma permissão</strong>: acesso ao V1 não libera automaticamente o V2. Junto com a entrega da plataforma virá um <strong>autoatendimento no BEX</strong> para habilitar/solicitar/permissionar usuários.</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">11. "O menu do AgentiX no Back Access vai ser substituído?"</button>
+    <div class="acc-body"><p><strong>Resposta (Asaph):</strong> Haverá processo de migração V1 → V2. Durante a transição <strong>as duas opções coexistem</strong>, mas novos projetos nascem no V2. Ao final, tudo consolida no 2.0.</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">12. "E o RAG? Tinha na V1 com upload e checkbox de indexação. Evoluiu?"</button>
+    <div class="acc-body"><p><strong>Resposta (Jeferson + Asaph):</strong> Existe um RAG <strong>built-in</strong> no V2 (similar ao da V1: upload + habilitar indexação por arquivo/diretório). Em paralelo, o BIA Tech desenvolve uma <strong>nova plataforma de RAG</strong> muito mais robusta: embedding de páginas do Confluence, vídeo, áudio, ownership de conteúdo e feedback. O AgentiX vai <strong>plugar nessa plataforma via API</strong>.</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">13. "Posso criar um serviço MCP para meu agente buscar dados via RAG?"</button>
+    <div class="acc-body"><p><strong>Resposta (Jeferson):</strong> Dentro da plataforma <strong>não precisa de MCP</strong> para isso — o agente acessa o conteúdo embedado diretamente via tool, mais simples. Na futura integração com a nova plataforma de RAG, a comunicação deve funcionar via MCP (detalhes ainda em definição).</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">14. "Vai ter limitação de consumo de tokens?"</button>
+    <div class="acc-body"><p><strong>Resposta (Jeferson):</strong> Hoje <strong>uso liberado, sem limite</strong>. No V2, o admin é <strong>nativo</strong> na plataforma: o tenant admin vê agentes executados, modelos usados, quantidade de tokens, nº de execuções, segregado por centro de custo. É <strong>informativo</strong> — não há rateio de custos; o custo cai todo para a plataforma.</p></div>
+  </div>
+
+  <div class="acc"><button class="acc-head">15. "Como testo? Preciso falar com alguém?"</button>
+    <div class="acc-body"><p><strong>Resposta (Jeferson):</strong> Ambientes: lab (interno), <strong>dev (acesso dos usuários)</strong>, homolog e prod (ainda sem liberação). Basta baixar a extensão do VS Code e ter acesso ao dev; sem acesso, falar com o time (Jeferson, Asaph, Samuel, Carlos, Anny) — fazem até uma call de onboarding. A documentação tem link e vídeo do plugin.</p></div>
+  </div>
+</section>
+
+<!-- ============ 7. FLASHCARDS ============ -->
+<section id="s6">
+  <h2>7. Flashcards de Estudo</h2>
+  <p>Clique no cartão para virar. Use os botões para navegar. Estude até responder todos sem virar. 😉</p>
+  <div class="fc-wrap">
+    <div class="fc" id="fc" onclick="this.classList.toggle('flip')">
+      <div class="fc-face fc-front"><div class="fc-label">Pergunta</div><div class="q" id="fcq"></div><p style="margin-top:16px; font-size:12px; color:var(--tx3);">clique para ver a resposta</p></div>
+      <div class="fc-face fc-back"><div class="fc-label">Resposta</div><div class="a" id="fca"></div></div>
+    </div>
+  </div>
+  <div class="fc-count"><span id="fcn">1</span> / <span id="fct"></span></div>
+  <div class="fc-controls">
+    <button class="btn ghost" onclick="fcPrev()">← Anterior</button>
+    <button class="btn" onclick="fcNext()">Próximo →</button>
+    <button class="btn ghost" onclick="fcShuffle()">🔀 Embaralhar</button>
+  </div>
+</section>
+
+<!-- ============ 8. SCRIPT ============ -->
+<section id="s7">
+  <h2>8. Script da Fala — ~30 minutos (parte conceitual)</h2>
+  <p>Ritmo confortável: ~130 palavras/min. As falas foram escritas em <strong>tom de conversa</strong>, não de leitura — decore a sequência de ideias, não as palavras. A ordem dos blocos é a mesma ordem das abas de estudo: problema → o que é → como funciona → valor → como começar → futuro → fechamento. As respostas do Q&amp;A do workshop já estão entrelaçadas nas falas, no assunto certo. <strong>Os marcadores amarelos 🎬 indicam a hora de passar o slide (12 no total)</strong> — use cada um como uma pausinha natural pra respirar, sem pressa.</p>
+
+  <div class="tl">
+
+    <div class="tl-item">
+      <span class="tl-time">00:00 – 02:00 • Abertura e agenda</span>
+      <h4>Quebra-gelo e formato</h4>
+      <div class="speech">Boa tarde, pessoal! Obrigado por estarem aqui. Hoje eu vou apresentar pra vocês o AgentiX 2.0, que é a nossa plataforma da BIA Tech pra criação e execução de agentes de IA. O formato vai ser assim: primeiro eu passo pela parte conceitual — por que essa plataforma existe, o que ela é, como ela funciona por dentro, como vocês fazem pra ter acesso e o que vem pela frente. E na sequência o [nome do engenheiro] assume e mostra tudo isso funcionando ao vivo, na prática. Pode anotar as perguntas ao longo do caminho que no final a gente abre espaço pra discutir tudo.<span class="slide-cue">🎬 Passa para o slide 2 · pausinha, respira</span></div>
+      <div class="tip">Comece com energia e diga claramente a agenda — a plateia relaxa quando sabe o formato. Olhe para as pessoas, não para o slide.</div>
+    </div>
+
+    <div class="tl-item">
+      <span class="tl-time">02:00 – 06:00 • O problema</span>
+      <h4>Por que agentes? Por que uma plataforma?</h4>
+      <div class="speech">Antes de mostrar a ferramenta, eu quero alinhar o porquê dela existir. Pensa comigo: um modelo de linguagem sozinho, um LLM puro, é tipo uma pessoa genial trancada numa sala isolada. Ele pensa muito bem, responde, resume, traduz... mas ele não executa nada. Ele não lê um arquivo do seu projeto, não chama uma API interna, não salva resultado em lugar nenhum. Agora, quando a gente pega esse mesmo modelo e dá pra ele instruções, capacidades e limites, ele deixa de só pensar e passa a agir. Isso é um agente de IA: pensa, responde e executa ações. Aí vem o segundo problema, que talvez vocês já tenham vivido na pele: quando cada time começa a criar os seus próprios agentes, cada um faz do seu jeito. Vira um monte de prompt solto, script isolado, sem padrão, sem histórico, sem governança nenhuma. Funciona no notebook de uma pessoa e mais ninguém consegue manter. É exatamente essa dor que o AgentiX resolve, com três palavras que eu quero que vocês levem daqui: padrão pra descrever agentes, controle de execução com histórico, e reaproveitamento de componentes entre os times.<span class="slide-cue">🎬 Passa para o slide 3 · pausinha, respira</span></div>
+      <div class="tip">O contraste "pessoa na sala isolada × pessoa com computador" é da documentação oficial — funciona muito bem num slide com as duas caixinhas lado a lado.</div>
+    </div>
+
+    <div class="tl-item">
+      <span class="tl-time">06:00 – 10:00 • O que é o AgentiX 2.0</span>
+      <h4>Definição, história 1.0 → 2.0 e posicionamento</h4>
+      <div class="speech">Então o que é o AgentiX 2.0? É a plataforma da BIA Tech pra criar, organizar e executar agentes de IA de forma organizada, auditável e escalável. E vale contar rapidinho a história, porque esse "2.0" tem um contexto importante. O AgentiX 1.0 era baseado num framework chamado AutoGen, e os agentes eram definidos em arquivos YAML — quem usou sabe que era difícil de entender e de manter. Na versão 2.0 a gente consolidou o runtime com o Agno e mudou a forma de definir os agentes: agora tudo nasce num arquivo chamado AGENTS.md. E por que isso importa? Porque AGENTS.md é um padrão de mercado — é o mesmo formato que vocês encontram em praticamente qualquer harness de agentes hoje. Ou seja, o conhecimento que vocês já têm de outras ferramentas se aproveita direto aqui, sem curva de aprendizado de um formato proprietário. Além do AGENTS.md, o bundle tem um manifest.yaml, que é só a etiqueta interna que diz pra plataforma como carregar e executar aquele pacote. E toda execução é orientada por sessão, com rastreabilidade completa — daqui a pouco eu explico o que isso significa na prática. Um último ponto de posicionamento, porque essa pergunta sempre aparece: o AgentiX é a frente tech-for-tech, ou seja, agentes construídos por e para times de tecnologia. Pra casos de negócio existe a Bridge — que, aliás, é também quem fornece os modelos de linguagem que a gente consome.<span class="slide-cue">🎬 Passa para o slide 4 (intermediário de transição) · pausinha, respira</span></div>
+    </div>
+
+    <div class="tl-item">
+      <span class="tl-time">10:00 – 16:00 • Como funciona</span>
+      <h4>Agent, Team, Workflow, Sessão + skills/tools, HITL, modelos</h4>
+      <div class="speech"><span class="slide-cue" style="margin-top:0">🎬 Já passa para o slide 5 — o 4 é só a transição · respira e começa</span>Agora, como isso funciona por dentro. A plataforma tem três blocos de construção, e a lógica é sempre ir do simples pro complexo. O primeiro é o Agent, o bloco mais básico. Todo agente tem três coisas: um modelo, que é o cérebro de raciocínio; instruções, que dizem como ele deve se comportar; e skills, que são as ações que ele tem permissão de executar — ler e escrever arquivos, chamar APIs, buscar na web. E aqui deixa eu esclarecer uma dúvida que apareceu no workshop: "e as tools, onde entram?". A tool não é um objeto separado — ela vive dentro da skill. Pensa na skill como o script mais a instrução de como usar aquele script. Hoje elas são escritas em Python, e já está no radar o suporte a outras linguagens, como Java e Node. E com o recurso de secrets, dá pra guardar credenciais e fazer chamadas de API de forma segura.<span class="slide-cue">🎬 Passa para o slide 6 · pausinha, respira</span>O segundo bloco é o Team: um grupo de agentes colaborando — um analisa, outro escreve, outro revisa. E o terceiro é o Workflow: o fluxo completo, com etapas em ordem, começo, meio e fim. Uma analogia que ajuda a fixar: o Agent é o cozinheiro especialista, o Team é a brigada de cozinha, o Workflow é a receita — e cada execução real disso é uma Sessão. A sessão guarda todo o histórico do que aconteceu, e os arquivos usados ou gerados ficam salvos como artefatos. Outro detalhe que foi pergunta no workshop e vale deixar claro: hoje a plataforma trabalha com múltiplos agentes orquestrados — a saída de um agente vira entrada do próximo, e quem controla essa dança é o Workflow.<span class="slide-cue">🎬 Passa para o slide 7 · pausinha, respira</span>O conceito de sub-agente, que é um agente rodando outro dentro do próprio contexto, ainda não é suportado — se aparecer caso de uso, o time avalia. Duas capacidades operacionais que fazem diferença no dia a dia: o streaming, que deixa você acompanhar a execução em tempo real, e o HITL — human in the loop — que permite configurar pontos da sessão onde um humano precisa validar antes dos agentes continuarem sozinhos. E sobre os modelos: a gente tem as linhas da OpenAI e da Anthropic, fornecidas pela Bridge, e adicionar ou atualizar um modelo é rápido — questão de um ou dois dias. Por fim, dá pra trabalhar de dois jeitos: pela interface da plataforma, que é no-code, ou pelo plugin do VS Code — e a visão do plugin é justamente você construir e enviar seus agentes sem sair do editor; na plataforma fica o papel de aprovação, que é do tenant admin. E um princípio da nossa documentação que eu recomendo de coração: comece sempre com um único Agent. Evolua pra Team e Workflow só quando a complexidade real do caso pedir.</div>
+      <div class="tip">Este é o bloco mais denso — respire entre os sub-temas. A ordem interna é: Agent → skills/tools → Team → Workflow → Sessão/artefatos → multi-agentes → streaming/HITL → modelos → formas de uso.</div>
+    </div>
+
+    <div class="tl-item">
+      <span class="tl-time">16:00 – 20:00 • Benefícios e valor</span>
+      <h4>Valor para o dev, valor para a organização + tokens e RAG</h4>
+      <div class="speech"><span class="slide-cue" style="margin-top:0">🎬 Passa para o slide 8 · respira e começa</span>Beleza, e o que isso tudo entrega de valor? Deixa eu separar em duas visões. Pra quem desenvolve: você trabalha num padrão de mercado que já conhece, tem o plugin do VS Code, skills prontas, secrets pra APIs, versionamento de bundle. E um detalhe que sempre gera pergunta — inclusive foi pergunta no workshop — o AgentiX não consome tokens de vocês. As instruções do agente, uma vez enviadas, ficam na plataforma; você não fica reenviando contexto. E o custo é centralizado na plataforma — hoje o uso está liberado, sem limite. Agora, pra organização: governança de verdade — tenant, aprovação, permissionamento — e observabilidade nativa. O admin do 2.0 já vem dentro da plataforma: o tenant admin enxerga quais agentes rodaram, quais modelos foram usados, quantidade de tokens, número de execuções, tudo segregado por centro de custo. Hoje isso é informativo, não tem rateio — mas dá transparência total. E rastreabilidade: toda execução é uma sessão com histórico completo. Se alguém perguntar "o que esse agente fez e por quê?", a resposta está registrada lá. Ah, e sobre base de conhecimento, que é outra dúvida frequente: a plataforma já tem um RAG nativo — você sobe os arquivos, habilita a indexação, e o agente consome aquilo como base de conhecimento. E em paralelo o BIA Tech está construindo uma plataforma de RAG bem mais robusta — páginas do Confluence, vídeo, áudio — e o AgentiX vai se plugar nela via API.</div>
+      <div class="tip">"Não consome seus tokens" é o argumento que mais gera reação positiva — dê uma pausa depois de falar.</div>
+    </div>
+
+    <div class="tl-item">
+      <span class="tl-time">20:00 – 24:00 • Como começar</span>
+      <h4>Habilitação, repositórios e acessos (onboarding)</h4>
+      <div class="speech"><span class="slide-cue" style="margin-top:0">🎬 Passa para o slide 9 · respira e começa</span>E como é que vocês começam a usar? O caminho é todo pelo BEX. Vocês entram no portal, vão em Marketplace, pesquisam por AgentiX e clicam em acessar. Lá dentro, o onboarding tem três passos, nessa ordem. Primeiro, a Habilitação do projeto: é onde você vincula o centro de custo, o projeto Jira e os responsáveis. Nesse formulário você informa o e-mail do seu gerente — precisa ser alguém com cargo de manager — e define os gestores de acesso do projeto. E aqui tem um conceito que vale a pena guardar: o Gestor de Acesso é o cargo máximo dentro do projeto, acima até do tenant admin. É ele quem aprova ou reprova as solicitações de acesso do time. A recomendação é que esse papel fique com POs ou Tech Leads.<span class="slide-cue">🎬 Passa para o slide 10 · pausinha, respira</span>Depois que o gerente aprova a habilitação, vem o segundo passo: Repositórios e Pipelines — a plataforma provisiona o repositório no GitHub corporativo, já com os dados de governança do projeto registrados. E o terceiro passo são os Acessos: cada pessoa do time solicita o seu perfil. São quatro: Visualizador, que só enxerga logs e agentes; Executor, que executa mas não edita; Desenvolvedor, que constrói e ajusta os agentes e ganha permissão de dev no GitHub; e Admin, que faz tudo isso e ainda aprova o que vai pro tenant dele. Quem aprova essas solicitações é o Gestor de Acesso do projeto. E um aviso prático pra quem já usava o 1.0: a credencial é a mesma de rede, mas a permissão não migra automaticamente — precisa solicitar o acesso ao 2.0. A documentação tem o passo a passo completo com prints, e se travar em alguma etapa, é só falar com a gente.</div>
+      <div class="tip">Este bloco transforma interesse em ação — é o "call to action" da sua apresentação. Tenha o link da documentação pronto para compartilhar no chat.</div>
+    </div>
+
+    <div class="tl-item">
+      <span class="tl-time">24:00 – 27:00 • Visão de futuro</span>
+      <h4>Para onde a plataforma está indo</h4>
+      <div class="speech"><span class="slide-cue" style="margin-top:0">🎬 Passa para o slide 11 · respira e começa</span>E pra onde a plataforma está indo? Tem bastante coisa boa vindo por aí. A frente que mais gera expectativa é a de integrações via MCP: GitHub, ServiceNow, Jira, Confluence, Dynatrace e Figma. O GitHub vem primeiro — o time é da mesma gerência do BIA Tech e a conversa já está andando. Também está no radar a escolha do executor: hoje as skills rodam em Python, e a ideia é abrir pra Java, Node e outras linguagens. Tem o pipeline de deploy via Change Velocity, o Marketplace de agentes — pra vocês descobrirem e reaproveitarem o que outros times já construíram — um agente que migra automaticamente os projetos do 1.0 pro 2.0 dentro da própria plataforma, e as integrações com a API Axway e com o BIA Tech 360. E além da parte técnica, vem uma agenda forte de capacitação: seis workshops online e oito presenciais — São Paulo, Uberlândia, Curitiba e Recife. Ou seja: a plataforma já entrega valor hoje, e o caminho dela é ficar cada vez mais conectada ao ecossistema que vocês já usam no dia a dia.<span class="slide-cue">🎬 Passa para o slide 12 · pausinha, respira</span></div>
+      <div class="tip">Fale do futuro com entusiasmo de quem está vendendo visão, não cronograma. Se perguntarem prazo de algo específico: "está em priorização junto com os usuários — oficializa a necessidade via ticket que ela ganha força".</div>
+    </div>
+
+    <div class="tl-item">
+      <span class="tl-time">27:00 – 30:00 • Evolução conjunta + ponte para a demo</span>
+      <h4>Modelo de parceria e fechamento</h4>
+      <div class="speech">Antes de passar pra demo, um recado que pra mim é o mais importante da tarde: essa plataforma evolui com vocês. O nosso time é dono da plataforma — quem constrói os agentes são os times, cada um no seu contexto, porque ninguém conhece o problema de vocês melhor que vocês. Encontrou um bug? Sentiu falta de uma funcionalidade? Abre um ticket no Back Access. Isso vira card no Jira e entra na nossa reunião semanal de priorização, que é aberta pra acompanhamento. Dor oficializada é dor priorizada. Então, recapitulando em três frases: o AgentiX 2.0 transforma ideias em agentes executáveis de forma organizada, auditável e escalável. Você define num padrão de mercado, executa com rastreabilidade total e sem se preocupar com token. E o roadmap é construído junto com quem usa. Agora chega de conceito — [nome do engenheiro], mostra pra gente como isso funciona na prática!<span class="slide-cue">🎬 Último slide (12) já está na tela · entrega o palco para a demo</span></div>
+      <div class="tip">Termine olhando para o engenheiro e "entregando o palco" fisicamente — sinaliza transição clara para a plateia.</div>
+    </div>
+
+    <div class="tl-item">
+      <span class="tl-time">30:00 – 50:00 • Demo (engenheiro)</span>
+      <h4>Sugestão de roteiro para alinhar com ele</h4>
+      <ul>
+        <li>Login na plataforma + visão do tenant e projetos (2 min)</li>
+        <li>Anatomia de um bundle: AGENTS.md + manifest.yaml (4 min)</li>
+        <li>Criar/executar um Agent simples com HITL (ex.: agente que pergunta o idioma antes de salvar o arquivo — mesmo exemplo do workshop) (6 min)</li>
+        <li>Workflow com 2 steps (2 agentes) + artefatos e histórico da sessão (5 min)</li>
+        <li>Plugin do VS Code: enviar agente e fluxo de aprovação (3 min)</li>
+      </ul>
+      <div class="tip">Lição do workshop: a execução ao vivo pode ficar lenta (infra em evolução). Combine com o engenheiro um plano B: sessão pré-executada ou vídeo curto de backup.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 9. CHECKLIST ============ -->
+<section id="s8">
+  <h2>9. Checklist até 03/08</h2>
+  <div class="card">
+    <h3 style="margin-top:0">Preparação (o progresso fica salvo neste navegador)</h3>
+    <ul class="check" id="checklist">
+      <li><input type="checkbox"><span>Ler a seção "O que é" e decorar a definição de 1 frase</span></li>
+      <li><input type="checkbox"><span>Dominar a hierarquia Agent → Team → Workflow e a analogia da cozinha</span></li>
+      <li><input type="checkbox"><span>Decorar as 5 capacidades operacionais (sessão, streaming, HITL, skills, observabilidade)</span></li>
+      <li><input type="checkbox"><span>Entender skills × tools (tool faz parte da skill) — pergunta recorrente</span></li>
+      <li><input type="checkbox"><span>Saber responder: multi-agentes sim, sub-agentes ainda não</span></li>
+      <li><input type="checkbox"><span>Saber responder: tokens não são do usuário; sem limite hoje; admin nativo por tenant</span></li>
+      <li><input type="checkbox"><span>Revisar as 15 perguntas do Q&amp;A do workshop</span></li>
+      <li><input type="checkbox"><span>Passar por todos os flashcards sem errar</span></li>
+      <li><input type="checkbox"><span>Ensaiar o script em voz alta cronometrando ~30 min (pelo menos 2×)</span></li>
+      <li><input type="checkbox"><span>Alinhar o roteiro da demo com o engenheiro + plano B (vídeo/sessão pré-executada)</span></li>
+      <li><input type="checkbox"><span>Validar acesso ao ambiente de dev antes do dia (credencial V2 é separada da V1!)</span></li>
+      <li><input type="checkbox"><span>Preparar slide do roadmap sem datas comprometidas</span></li>
+      <li><input type="checkbox"><span>Ter à mão o canal de suporte (ticket Back Access) para indicar à plateia</span></li>
+      <li><input type="checkbox"><span>Dominar o fluxo de onboarding: Habilitação → Repositórios e Pipelines → Acessos + os 4 perfis</span></li>
+    </ul>
+  </div>
+
+  <div class="card red">
+    <h3 style="margin-top:0">Armadilhas a evitar no palco</h3>
+    <ul>
+      <li>❌ Não prometa <strong>sub-agentes</strong>, <strong>MCP externo (Figma)</strong> nem <strong>datas do roadmap</strong>.</li>
+      <li>❌ Não diga que o time AgentiX constrói agentes para as squads — o foco é a <strong>plataforma</strong>.</li>
+      <li>❌ Não confunda AgentiX (tech-for-tech) com Bridge (business).</li>
+      <li>❌ Não diga que dá para usar os modelos do AgentiX pelo Copilot Chat — não dá, e é proposital.</li>
+      <li>✅ Frase coringa para pergunta difícil: <em>"Ótima pergunta — vou levar para o time da plataforma e oficializamos via ticket para priorizar no backlog."</em></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>Guia de estudo gerado a partir do Workshop &amp; Hands-on de 13/07/2026 + documentação oficial AgentiX 2.0 + roadmap do quarter • Uso interno</footer>
+
+<script>
+// ---- Navegação por abas ----
+const nav = document.getElementById('nav');
+nav.addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  nav.querySelectorAll('button').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  document.querySelectorAll('main section').forEach(s => s.classList.remove('show'));
+  document.getElementById(b.dataset.s).classList.add('show');
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+// ---- Accordions ----
+document.querySelectorAll('.acc-head').forEach(h => {
+  h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
+});
+
+// ---- Flashcards ----
+const cards = [
+  ["O que é o AgentiX 2.0 em uma frase?","Plataforma interna da BIA Tech para criar, organizar e executar agentes de IA de forma padronizada, auditável e escalável — componentes reutilizáveis executados em fluxo controlado, em vez de prompts e scripts soltos."],
+  ["Qual a diferença entre o AgentiX 1.0 e o 2.0?","1.0: fluxo legado baseado em AutoGen, definição via YAML, difícil de manter. 2.0: runtime consolidado com Agno, modelo OAF-first, definição em AGENTS.md e execução orientada por sessão. YAML legado só para migração."],
+  ["Qual a diferença entre LLM puro e agente?","LLM puro pensa e responde (gera texto, resume, explica, traduz), mas não lê arquivos, não chama APIs nem persiste artefatos. Agente = LLM + instruções + skills + limites operacionais: pensa, responde E executa ações."],
+  ["O que compõe um Agent no AgentiX 2.0?","model (o cérebro/LLM), instructions (comportamento esperado), skills (ações permitidas, ex.: file-io, http-client, web-search) e harnessConfig (streaming, HITL, memória, guardrails). Variables no formato nome_variavel."],
+  ["Agent, Team e Workflow — quando usar cada um?","Agent: tarefa única e direta. Team: grupo de agentes colaborando quando uma 'pessoa virtual' não basta. Workflow: fluxo com etapas em ordem, começo/meio/fim definidos. Princípio: comece com 1 Agent e evolua conforme a complexidade real."],
+  ["Quais as estratégias de orquestração de um Team?","coordinate, route, broadcast e tasks."],
+  ["Para que servem AGENTS.md e manifest.yaml?","AGENTS.md define 'quem são' os agentes e 'como trabalham' (caminho principal de autoria). manifest.yaml diz à plataforma como carregar/executar o bundle — uma etiqueta de compatibilidade interna da plataforma."],
+  ["O que são Tenant, Projeto, Sessão e Artefato?","Tenant: espaço da organização na plataforma. Projeto: conjunto ativo de componentes (bundle publicado). Sessão: uma execução real de Agent/Team/Workflow. Artefato: arquivo usado (entrada) ou gerado (saída) na execução."],
+  ["Quais as 5 capacidades operacionais da plataforma?","1) Execução por sessão com histórico; 2) Streaming de eventos em tempo real; 3) HITL — validação humana em pontos da sessão; 4) Skills para ações práticas (arquivos, APIs); 5) Observabilidade (logs, status, custos)."],
+  ["O que é HITL?","Human-in-the-Loop: abordagem usada quando queremos uma validação humana em determinado ponto da sessão, antes dos agentes prosseguirem sozinhos até o fim do fluxo."],
+  ["Qual a relação entre skill e tool?","A tool não é um objeto separado: ela faz parte da skill. A skill mapeia e instrui o agente a usar um script/código. 'A skill atua junto com a instrução de como usar.' Hoje em Python; Java e Node estão planejados."],
+  ["O AgentiX consome tokens do usuário? Tem limite?","Não consome tokens do usuário — o custo cai para a plataforma. Hoje o uso é liberado, sem limite. O admin é nativo no V2: o tenant admin vê agentes executados, modelos, tokens e execuções por centro de custo (informativo, sem rateio)."],
+  ["O AgentiX suporta sub-agentes?","Não. Suporta múltiplos agentes orquestrados: a saída de um vira input do próximo, controlado pelo Workflow. Sub-agentes (agente dentro de agente) não têm caso de uso identificado ainda; o time avalia se houver demanda."],
+  ["De onde vêm os LLMs do AgentiX?","Da Bridge. Linhas OpenAI (GPT) e Anthropic (Sonnet/Opus). Adicionar/atualizar modelo: requisição à Bridge → deploy em ~1–2 dias → configuração na plataforma. Não dá para acessar esses modelos pelo Copilot Chat."],
+  ["Qual a diferença entre AgentiX e Bridge?","AgentiX: plataforma de agentes tech-for-tech (times de tecnologia). Bridge: frente de IA para business — e também fornecedora dos LLMs que o AgentiX consome."],
+  ["Como funciona o RAG no 2.0?","Existe RAG built-in básico (upload de arquivos + indexação, similar à V1). Em paralelo, o BIA Tech desenvolve nova plataforma de RAG (Confluence, vídeo, áudio, ownership, feedback) na qual o AgentiX vai plugar via API."],
+  ["Qual a visão do plugin do VS Code?","Fazer o máximo possível sem sair do editor: construir, enviar e consumir agentes de dentro do VS Code. Na plataforma fica o papel do tenant admin (ex.: aprovação de agentes enviados via plugin)."],
+  ["Como funciona a migração V1 → V2?","A partir do lançamento, novos projetos nascem obrigatoriamente no V2. Projetos existentes migram gradualmente; V1 e V2 coexistem na transição; ao final tudo consolida no 2.0. Permissão do V1 NÃO vale para o V2 — precisa solicitar."],
+  ["Quais integrações MCP estão no roadmap e qual vem primeiro?","GitHub (prioridade 1 — mesma gerência do BIA Tech), depois ServiceNow, Jira, Confluence, Dynatrace e Figma. MCPs externos (ex.: Figma) ainda em discussão por questões de segurança e gateway."],
+  ["Como o usuário pede suporte ou nova funcionalidade?","Ticket no Back Access (suporte, bug ou feature) → vira card no Jira → reunião semanal de priorização com acompanhamento do usuário. Dor oficializada ganha força no backlog."],
+  ["Quais os ambientes da plataforma?","Laboratório (interno do time), Desenvolvimento (acesso dos usuários), Homologação e Produção (ainda sem liberação geral)."],
+  ["Cite 5 itens do roadmap do quarter.","Ex.: MCPs (GitHub, ServiceNow, Jira, Confluence, Dynatrace, Figma); escolha de executores (Python/Java/Node); pipeline com deploy via Change Velocity; frontend NextJS; agente de migração 1.0→2.0; API Axway; Marketplace; BIA Tech 360; 6 workshops online + 8 presenciais (SP, Uberlândia, Curitiba, Recife)."],
+  ["Para que serve o upload de arquivos na plataforma?","Para o agente consumir arquivos: ex. subir um repositório para gerar documentação/atualizar código, ou subir um arquivo para embedding (base de conhecimento). A skill file-io lê/escreve nesses arquivos no mesmo file system."],
+  ["O time do AgentiX constrói agentes para as squads?","Não — o time é dono da PLATAFORMA. A construção dos agentes é responsabilidade dos times usuários. O time evolui a plataforma conforme as necessidades reportadas."],
+  ["Qual a ordem oficial de onboarding no AgentiX 2.0?","1) Habilitação AgentiX (centro de custo, projeto Jira, e-mail do gerente com cargo MANAGER, gestores de acesso, justificativa); 2) Repositórios e Pipelines (repo no GitHub corporativo + governança); 3) Acessos AgentiX (perfil por usuário). Caminho: BEX → Marketplace → 'AgentiX' → Acessar."],
+  ["Quais os 4 perfis de acesso e o que cada um pode?","Visualizador: só visualiza logs e agentes. Executor: executa o agente, sem editar/publicar. Desenvolvedor: constrói e ajusta agentes + permissões de dev no GitHub. Admin: faz tudo e ainda aprova o que vai para o tenant dele."],
+  ["Quem é o Gestor de Acesso?","O cargo máximo do projeto (acima do tenant admin). Aprova/reprova as solicitações de acesso. Pode ser a mesma pessoa que o tenant admin, mas não é regra, e pode existir sem ser usuário operacional. Recomendação oficial: POs ou Tech Leads."]
+];
+let fci = 0;
+const fc = document.getElementById('fc');
+function fcRender(){
+  fc.classList.remove('flip');
+  setTimeout(()=>{
+    document.getElementById('fcq').textContent = cards[fci][0];
+    document.getElementById('fca').textContent = cards[fci][1];
+    document.getElementById('fcn').textContent = fci+1;
+  }, fc.classList.contains('flip') ? 250 : 0);
+}
+function fcNext(){ fci=(fci+1)%cards.length; fcRender(); }
+function fcPrev(){ fci=(fci-1+cards.length)%cards.length; fcRender(); }
+function fcShuffle(){ for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];} fci=0; fcRender(); }
+document.getElementById('fct').textContent = cards.length;
+fcRender();
+
+// ---- Checklist persistente ----
+const boxes = document.querySelectorAll('#checklist input');
+boxes.forEach((b,i)=>{
+  b.checked = localStorage.getItem('agx-chk-'+i)==='1';
+  b.addEventListener('change', ()=> localStorage.setItem('agx-chk-'+i, b.checked?'1':'0'));
+});
+</script>
+</body>
+</html>
